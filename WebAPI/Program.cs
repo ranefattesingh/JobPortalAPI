@@ -22,6 +22,8 @@ builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<ILocationService, LocationService>();
 builder.Services.AddScoped<ILocationRepository, LocationRepository>();
 
+builder.Services.AddScoped<IJobsService, JobsService>();
+builder.Services.AddScoped<IJobsRepository, JobsRepository>();
 
 var app = builder.Build();
 
