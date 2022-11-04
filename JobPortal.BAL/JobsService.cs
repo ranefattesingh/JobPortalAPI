@@ -11,6 +11,7 @@ namespace JobPortal.BAL
         public JobPostBE CreateJob(JobPostBE jobPostBE);
         public JobPostBE? UpdateJob(int id, JobPostBE jobPostBE);
         public JobPostBE? GetJobDetail(int id);
+        public IEnumerable<JobPostBE> SearchJob(JobSearchQueryParamsBE queryParams);
     }
 
     public class JobsService : IJobsService
@@ -113,6 +114,33 @@ namespace JobPortal.BAL
             };
 
             return jobDetailBE;
+        }
+
+        public IEnumerable<JobPostBE> SearchJob(JobSearchQueryParamsBE queryParams)
+        {
+            var queryParamsDE = new JobSearchQueryParamsDE
+            {
+                Q = queryParams.Q,
+                PageNo = queryParams.PageNo,
+                PageSize = queryParams.PageSize,
+                DepartmentID = queryParams.DepartmentID,
+                LocationID = queryParams.LocationID,
+            };
+
+            var searchResultDE = _jobsRepository.SearchJob(queryParamsDE);
+
+            var searchResultBE = searchResultDE.Select(result => new JobPostBE
+            {
+                ID = result.ID,
+                Code = result.Code,
+                Title = result.Title,
+                Location = result.Location,
+                Department = result.Department,
+                PostedDate = result.PostedDate,
+                ClosingDate = result.ClosingDate,
+            }).ToList();
+
+            return searchResultBE;
         }
     }
 }

@@ -167,5 +167,32 @@ namespace WebAPI.Controllers
             }
         }
 
+        [HttpPost("/list")]
+        public ActionResult SearchJob([FromQuery]JobSearchQueryParams queryParams)
+        {
+            var queryParamsBE = new JobSearchQueryParamsBE
+            {
+                Q = queryParams.Q,
+                PageNo = queryParams.PageNo,
+                PageSize = queryParams.PageSize,
+                DepartmentID = queryParams.DepartmentID,
+                LocationID = queryParams.LocationID,
+            };
+
+            var resultBE = _jobsService.SearchJob(queryParamsBE);
+
+            var result = resultBE.Select(r => new
+            {
+                ID = r.ID,
+                Code = r.Code,
+                Title = r.Title,
+                Location = r.Location.Title,
+                Department = r.Department.Title,
+                PostedDate = r.PostedDate,
+                ClosingDate = r.ClosingDate,
+            }).ToList();
+
+            return new OkObjectResult(result);
+        }
     }
 }
