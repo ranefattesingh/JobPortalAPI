@@ -209,7 +209,11 @@ namespace WebAPI.Controllers
                     ClosingDate = r.ClosingDate,
                 }).ToList();
 
-                return new OkObjectResult(result);
+                return new OkObjectResult(new
+                {
+                    Total = result.Count,
+                    Data = result,
+                });
             }
             catch (NotFoundException ex)
             {

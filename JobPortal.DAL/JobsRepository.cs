@@ -24,13 +24,13 @@ namespace JobPortal.DAL
         public JobPostDE CreateJob(JobPostDE jobPostDE)
         {
             var location = _context.Locations.Find(jobPostDE.LocationID);
-            if(location == null)
+            if (location == null)
             {
                 throw new NotFoundException("location", jobPostDE.LocationID);
             }
 
             var department = _context.Departments.Find(jobPostDE.DepartmentID);
-            if(department == null)
+            if (department == null)
             {
                 throw new NotFoundException("department", jobPostDE.DepartmentID);
             }
@@ -69,7 +69,7 @@ namespace JobPortal.DAL
         public JobPostDE? UpdateJob(int id, JobPostDE jobPostDE)
         {
             var existingJobPost = _context.JobPosts.Find(id);
-            if(existingJobPost == null)
+            if (existingJobPost == null)
             {
                 return null;
             }
@@ -107,13 +107,13 @@ namespace JobPortal.DAL
             }
 
             var department = _context.Departments.Find(job.DepartmentID);
-            if(department == null)
+            if (department == null)
             {
                 throw new NotFoundException("department", job.DepartmentID);
             }
 
             var location = _context.Locations.Find(job.LocationID);
-            if(location == null)
+            if (location == null)
             {
                 throw new NotFoundException("location", job.LocationID);
             }
@@ -154,11 +154,20 @@ namespace JobPortal.DAL
         public IEnumerable<JobPostDE> SearchJob(JobSearchQueryParamsDE queryParams)
         {
             var result = _context.JobPosts
-                .Where(j => j.Title.Contains(queryParams.Q) && 
-                (queryParams.LocationID ?? 0) == j.LocationID &&
-                (queryParams.DepartmentID ?? 0) == j.DepartmentID)
-                .Skip(queryParams.PageNo * queryParams.PageSize)
+                .Where(j => j.Title.Contains(queryParams.Q) &&
+                (queryParams.LocationID ?? j.LocationID) == j.LocationID &&
+                (queryParams.DepartmentID ?? j.DepartmentID) == j.DepartmentID)
+                .Skip((queryParams.PageNo - 1) * queryParams.PageSize)
                 .Take(queryParams.PageSize).ToList();
+
+            for (var i = 0; i < result.Count(); i++)
+            {
+                var department = _context.Departments.Find(result[i].DepartmentID);
+                var location = _context.Locations.Find(result[i].LocationID);
+
+                result[i].Department = department;
+                result[i].Location = location;
+            }
 
             var searchResultDE = result.Select(r => new JobPostDE
             {
