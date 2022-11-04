@@ -1,4 +1,5 @@
-﻿using JobPortal.DAL.DataEntities;
+﻿using Common.Exception;
+using JobPortal.DAL.DataEntities;
 using Persistance.EntityFramework;
 using Persistance.EntityFramework.Models;
 using System.Diagnostics.Metrics;
@@ -65,7 +66,7 @@ namespace JobPortal.DAL
            var existingLocation = _context.Find<Location>(id);
             if(existingLocation == null)
             {
-                return null;
+                throw new NotFoundException("location", id);
             }
 
             existingLocation.Title = locationDE.Title;

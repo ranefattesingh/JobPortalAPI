@@ -1,4 +1,5 @@
-﻿using JobPortal.DAL.DataEntities;
+﻿using Common.Exception;
+using JobPortal.DAL.DataEntities;
 using Persistance.EntityFramework;
 using Persistance.EntityFramework.Models;
 
@@ -22,14 +23,28 @@ namespace JobPortal.DAL
 
         public JobPostDE CreateJob(JobPostDE jobPostDE)
         {
+            var location = _context.Locations.Find(jobPostDE.LocationID);
+            if(location == null)
+            {
+                throw new NotFoundException("location", jobPostDE.LocationID);
+            }
+
+            var department = _context.Departments.Find(jobPostDE.DepartmentID);
+            if(department == null)
+            {
+                throw new NotFoundException("department", jobPostDE.DepartmentID);
+            }
+
             var jobPostModel = new JobPost
             {
                 Title = jobPostDE.Title,
                 Description = jobPostDE.Description,
                 LocationID = jobPostDE.LocationID,
+                Location = location,
                 DepartmentID = jobPostDE.DepartmentID,
+                Department = department,
                 ClosingDate = jobPostDE.ClosingDate,
-                Code = string.Format("JOB-0{0}", _context.JobPosts.Count()+1),
+                Code = string.Format("JOB-0{0}", _context.JobPosts.Count() + 1),
                 PostedDate = DateTime.Now,
             };
 
@@ -88,8 +103,23 @@ namespace JobPortal.DAL
             var job = _context.JobPosts.Find(id);
             if (job == null)
             {
-                return null;
+                throw new NotFoundException("job", id);
             }
+
+            var department = _context.Departments.Find(job.DepartmentID);
+            if(department == null)
+            {
+                throw new NotFoundException("department", job.DepartmentID);
+            }
+
+            var location = _context.Locations.Find(job.LocationID);
+            if(location == null)
+            {
+                throw new NotFoundException("location", job.LocationID);
+            }
+
+            job.Department = department;
+            job.Location = location;
 
             var jobDetailDE = new JobPostDE
             {

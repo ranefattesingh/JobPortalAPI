@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{4BF265B1-481C-443B-BCEE-0B95D6C7A475}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{4BF265B1-481C-443B-BCEE-0B95D6C7A475}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobPortal.BAL", "JobPortal.BAL\JobPortal.BAL.csproj", "{318E4A22-4C0E-4788-A176-50BDCB12FD0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobPortal.BAL", "JobPortal.BAL\JobPortal.BAL.csproj", "{318E4A22-4C0E-4788-A176-50BDCB12FD0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobPortal.DAL", "JobPortal.DAL\JobPortal.DAL.csproj", "{5E567603-D66A-4F01-A2A1-1298A7C7EA6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JobPortal.DAL", "JobPortal.DAL\JobPortal.DAL.csproj", "{5E567603-D66A-4F01-A2A1-1298A7C7EA6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistance.EntityFramework", "Persistance.EntityFramework\Persistance.EntityFramework.csproj", "{2CE9B043-2A61-4230-AF2A-BBCDF0C86A6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistance.EntityFramework", "Persistance.EntityFramework\Persistance.EntityFramework.csproj", "{2CE9B043-2A61-4230-AF2A-BBCDF0C86A6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{95FF8DA3-1622-4203-80AE-B040E9100E92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{2CE9B043-2A61-4230-AF2A-BBCDF0C86A6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CE9B043-2A61-4230-AF2A-BBCDF0C86A6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CE9B043-2A61-4230-AF2A-BBCDF0C86A6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95FF8DA3-1622-4203-80AE-B040E9100E92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95FF8DA3-1622-4203-80AE-B040E9100E92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95FF8DA3-1622-4203-80AE-B040E9100E92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95FF8DA3-1622-4203-80AE-B040E9100E92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-﻿using JobPortal.DAL.DataEntities;
+﻿using Common.Exception;
+using JobPortal.DAL.DataEntities;
 using Persistance.EntityFramework;
 using Persistance.EntityFramework.Models;
 
@@ -52,7 +53,7 @@ namespace JobPortal.DAL
            var existingDepartment = _context.Find<Department>(id);
             if(existingDepartment == null)
             {
-                return null;
+                throw new NotFoundException("department", id);
             }
 
             existingDepartment.Title = department.Title;
