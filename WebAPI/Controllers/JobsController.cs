@@ -2,6 +2,8 @@
 using JobPortal.BAL;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.ViewModels;
+using Common.Exception;
+using Common.Response;
 
 namespace WebAPI.Controllers
 {
@@ -55,10 +57,17 @@ namespace WebAPI.Controllers
                     },
                 });
             }
+            catch (NotFoundException ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                });
+            }
             catch (Exception e)
             {
-                // TODO: return Internal Server Error
-                throw e;
+                return new InternalServerError();
             }
         }
 
@@ -110,10 +119,17 @@ namespace WebAPI.Controllers
                     },
                 });
             }
+            catch(NotFoundException ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                });
+            }
             catch (Exception e)
             {
-                // TODO: return Internal Server Error
-                throw e;
+                return new InternalServerError();
             }
         }
 
@@ -123,14 +139,6 @@ namespace WebAPI.Controllers
             try
             {
                 var jobDetail = _jobsService.GetJobDetail(id);
-                if (jobDetail == null)
-                {
-                    return new NotFoundObjectResult(new
-                    {
-                        Success = false,
-                        Message = "job post does not exist"
-                    });
-                }
 
                 return new OkObjectResult(new
                 {
@@ -160,39 +168,61 @@ namespace WebAPI.Controllers
                     },
                 });
             }
+            catch(NotFoundException ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
             catch (Exception e)
             {
-                // TODO: return Internal Server Error
-                throw e;
+                return new InternalServerError();
             }
         }
 
         [HttpPost("/list")]
         public ActionResult SearchJob([FromQuery]JobSearchQueryParams queryParams)
         {
-            var queryParamsBE = new JobSearchQueryParamsBE
+            try
             {
-                Q = queryParams.Q,
-                PageNo = queryParams.PageNo,
-                PageSize = queryParams.PageSize,
-                DepartmentID = queryParams.DepartmentID,
-                LocationID = queryParams.LocationID,
-            };
+                var queryParamsBE = new JobSearchQueryParamsBE
+                {
+                    Q = queryParams.Q,
+                    PageNo = queryParams.PageNo,
+                    PageSize = queryParams.PageSize,
+                    DepartmentID = queryParams.DepartmentID,
+                    LocationID = queryParams.LocationID,
+                };
 
-            var resultBE = _jobsService.SearchJob(queryParamsBE);
+                var resultBE = _jobsService.SearchJob(queryParamsBE);
 
-            var result = resultBE.Select(r => new
+                var result = resultBE.Select(r => new
+                {
+                    ID = r.ID,
+                    Code = r.Code,
+                    Title = r.Title,
+                    Location = r.Location.Title,
+                    Department = r.Department.Title,
+                    PostedDate = r.PostedDate,
+                    ClosingDate = r.ClosingDate,
+                }).ToList();
+
+                return new OkObjectResult(result);
+            }
+            catch (NotFoundException ex)
             {
-                ID = r.ID,
-                Code = r.Code,
-                Title = r.Title,
-                Location = r.Location.Title,
-                Department = r.Department.Title,
-                PostedDate = r.PostedDate,
-                ClosingDate = r.ClosingDate,
-            }).ToList();
-
-            return new OkObjectResult(result);
+                return new NotFoundObjectResult(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                });
+            }
+            catch(Exception e)
+            {
+                return new InternalServerError();
+            }
         }
     }
 }

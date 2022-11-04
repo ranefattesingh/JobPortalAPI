@@ -2,6 +2,8 @@
 using JobPortal.BAL;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.ViewModels;
+using Common.Exception;
+using Common.Response;
 
 namespace WebAPI.Controllers
 {
@@ -56,8 +58,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception e)
             {
-                // TODO: return Internal Server Error
-                throw e;
+                return new InternalServerError();
             }
         }
 
@@ -86,8 +87,7 @@ namespace WebAPI.Controllers
             }
             catch (Exception e)
             {
-                // TODO: return internal server error
-                throw e;
+                return new InternalServerError();
             }
         }
 
@@ -115,14 +115,6 @@ namespace WebAPI.Controllers
                 };
 
                 var updatedLocationBE = _locationService.UpdateLocation(id, locationBE);
-                if (updatedLocationBE == null)
-                {
-                    return new NotFoundObjectResult(new
-                    {
-                        Success = false,
-                        Message = "location does not exist"
-                    });
-                }
 
                 return new OkObjectResult(new
                 {
@@ -138,10 +130,17 @@ namespace WebAPI.Controllers
                     }
                 });
             }
+            catch (NotFoundException ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                });
+            }
             catch (Exception e)
             {
-                // TODO: return internal server error
-                throw e;
+                return new InternalServerError();
             }
         }
     }

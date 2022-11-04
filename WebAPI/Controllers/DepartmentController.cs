@@ -1,4 +1,6 @@
-﻿using JobPortal.BAL;
+﻿using Common.Exception;
+using Common.Response;
+using JobPortal.BAL;
 using JobPortal.BAL.BusinessEntities;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.ViewModels;
@@ -48,8 +50,7 @@ namespace WebAPI.Controllers
             }
             catch(Exception e)
             {
-                // TODO: return Internal Server Error
-                throw e;
+                return new InternalServerError();
             }
         }
 
@@ -74,8 +75,7 @@ namespace WebAPI.Controllers
             }
             catch(Exception e)
             {
-                // TODO: return internal server error
-                throw e;
+                return new InternalServerError();
             }
         }
 
@@ -99,14 +99,6 @@ namespace WebAPI.Controllers
                 };
 
                 var updatedDepartmentBE = _departmentService.UpdateDepartment(id, departmentBE);
-                if (updatedDepartmentBE == null)
-                {
-                    return new NotFoundObjectResult(new
-                    {
-                        Success = false,
-                        Message = "department does not exist"
-                    });
-                }
 
                 return new OkObjectResult(new
                 {
@@ -118,10 +110,17 @@ namespace WebAPI.Controllers
                     }
                 });
             }
+            catch(NotFoundException ex)
+            {
+                return new NotFoundObjectResult(new
+                {
+                    Success = false,
+                    Message = ex.Message,
+                });
+            }
             catch(Exception e)
             {
-                // TODO: return internal server error
-                throw e;
+                return new InternalServerError();
             }
         }
     }
